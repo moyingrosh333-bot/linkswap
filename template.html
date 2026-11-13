@@ -1,256 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>Continue to our website</title>
-  <!-- The bot puts the current link here. Keep this tag. -->
-  <meta name="link-target" content="{{LINK}}">
-  <meta name="robots" content="noindex">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#001507" />
+  <meta name="description" content="Visit our website to shop or learn more." />
+  <title>Shop or Learn More</title>
   <style>
     :root {
-      --bg: #050b05;
-      --card-top: #15301a;
-      --card-bottom: #0a170c;
-      --line: #3f9a2c;
-      --green: #9ff05c;
-      --green-btn-1: #cdf68f;
-      --green-btn-2: #8ff04c;
-      --text: #f6f8f4;
-      --soft: #e3e9e0;
-      --muted: #a9b3a5;
+      --page: #001407;
+      --surface: #071e0a;
+      --surface-2: #103511;
+      --lime: #a9ff6a;
+      --lime-bright: #80fa3b;
+      --white: #f7f7f7;
+      --muted: #d0d3cf;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
     body {
-      background:
-        radial-gradient(90% 60% at 50% 0%, rgba(80, 170, 50, 0.16) 0%, transparent 70%),
-        radial-gradient(70% 50% at 50% 100%, rgba(60, 140, 40, 0.10) 0%, transparent 70%),
-        var(--bg);
-      color: var(--text);
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 40%, #031e08 0%, var(--page) 68%, #001005 100%);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
       -webkit-font-smoothing: antialiased;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 20px 14px calc(20px + env(safe-area-inset-bottom));
-      min-height: 100vh;
+      align-items: flex-start;
+      padding: 55px 24px 116px;
     }
-    .card {
-      width: 100%;
-      max-width: 430px;
-      background: linear-gradient(180deg, var(--card-top) 0%, var(--card-bottom) 60%);
-      border: 1.5px solid var(--line);
-      border-radius: 30px;
-      padding: 34px 20px 26px;
+
+    .panel {
+      width: min(100%, 976px);
+      min-height: 1277px;
+      padding: 68px 46px 75px;
+      border-radius: 57px;
+      border: 2px solid rgba(119, 244, 74, .70);
+      background: radial-gradient(ellipse 90% 50% at 50% -5%, rgba(46, 109, 34, .43) 0%, rgba(8, 35, 12, .34) 65%, transparent 100%),
+                  linear-gradient(145deg, #0a260d 0%, #041908 52%, #071d0a 85%, #103910 100%);
+      box-shadow: inset 0 0 0 1px rgba(84, 204, 67, .08), 0 0 35px rgba(11, 97, 21, .12);
       text-align: center;
-      box-shadow:
-        0 0 0 1px rgba(159, 240, 92, 0.06),
-        0 0 40px rgba(80, 180, 40, 0.18),
-        0 30px 80px rgba(0, 0, 0, 0.6);
     }
 
-    /* Globe tile */
-    .icon {
-      width: 96px; height: 96px;
-      margin: 0 auto 30px;
-      border-radius: 26px;
-      display: grid; place-items: center;
-      background: linear-gradient(160deg, #3a6e2c 0%, #1d3d18 100%);
-      border: 1.5px solid #4fae35;
-      box-shadow: 0 0 24px rgba(110, 210, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    .globe-tile {
+      width: 216px;
+      height: 203px;
+      margin: 0 auto;
+      border-radius: 51px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(160deg, #2b6929, #153a19 78%);
+      border: 2px solid #5fda38;
+      box-shadow: inset 0 0 24px rgba(100, 235, 69, .07), 0 1px 7px rgba(110, 255, 66, .14);
     }
-    .icon svg { width: 46px; height: 46px; }
+    .globe-tile svg { width: 96px; height: 96px; color: #adff73; }
 
-    /* OUR WEBSITE */
-    .pill {
-      display: inline-flex; align-items: center; gap: 12px;
-      color: var(--green);
-      font-size: 13px; font-weight: 800;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+    .eyebrow {
+      margin: 52px 0 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 27px;
+      color: #c4f896;
+      font-size: clamp(19px, 3vw, 30px);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: .29em;
+      white-space: nowrap;
     }
-    .pill .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px rgba(159, 240, 92, 0.9);
+    .eyebrow-dot {
+      display: block;
+      flex: 0 0 20px;
+      height: 20px;
+      border-radius: 100%;
+      background: #75fa2d;
+      box-shadow: 0 0 21px 6px rgba(100, 244, 34, .30);
     }
 
     h1 {
-      font-size: clamp(30px, 9vw, 40px);
+      font-size: clamp(42px, 7.1vw, 85px);
+      line-height: 1.06;
+      letter-spacing: -.061em;
+      margin: 0 0 38px;
       font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.08;
-      margin-bottom: 18px;
+      white-space: nowrap;
     }
-    h1 span { color: var(--green); }
+    h1 span { color: #9df75b; }
 
-    /* Platforms box */
-    .platforms {
-      display: flex; align-items: center; justify-content: center;
-      gap: clamp(8px, 2.6vw, 14px);
-      background: rgba(12, 32, 12, 0.85);
-      border: 1px solid rgba(90, 170, 60, 0.28);
-      border-radius: 20px;
-      padding: 12px clamp(10px, 3vw, 16px);
-      margin: 0 auto 20px;
-    }
-    .platforms img {
-      height: clamp(20px, 6.8vw, 32px); width: auto; display: block; flex-shrink: 0;
-    }
-    .platforms .bar {
-      width: 2px; align-self: stretch; margin: 2px 0;
-      background: var(--green); border-radius: 2px; flex-shrink: 0; opacity: 0.85;
-    }
-    .platforms .label {
-      font-size: clamp(9.5px, 3.05vw, 14.5px); font-weight: 800;
-      line-height: 1.3;
-      letter-spacing: 0.01em;
-      text-transform: uppercase;
-      color: var(--text);
-      text-align: center;
-    }
-    .platforms .label span { display: block; white-space: nowrap; }
-    .platforms .label em { color: var(--green); font-style: italic; }
-    /* If the icons image is missing, show only the text */
-    .platforms.no-icons img, .platforms.no-icons .bar { display: none; }
-    .platforms.no-icons .label { font-size: clamp(13px, 4vw, 16px); }
-
-    .sub {
-      color: var(--soft);
-      font-size: 17px;
-      line-height: 1.5;
-      max-width: 320px;
-      margin: 0 auto 24px;
-    }
-
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 14px;
+    .social-strip {
+      min-height: 136px;
       width: 100%;
-      padding: 20px 20px;
-      border-radius: 22px;
-      background: linear-gradient(100deg, var(--green-btn-1) 0%, var(--green-btn-2) 100%);
-      color: #0a1208;
-      font-size: 18px; font-weight: 800;
-      letter-spacing: -0.01em;
+      border-radius: 48px;
+      background: linear-gradient(115deg, #123c11, #174a13 50%, #13400f 100%);
+      border: 1px solid rgba(87, 195, 49, .18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      padding: 18px 36px;
+    }
+    .social-icons { display: flex; align-items: center; gap: 13px; flex-shrink: 0; }
+    .social-icon {
+      display: grid;
+      place-items: center;
+      width: 63px;
+      height: 63px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .social-icon svg { display: block; width: 100%; height: 100%; }
+    .social-separator { width: 3px; height: 72px; background: #a3ff71; flex-shrink: 0; }
+    .social-copy {
+      font-size: clamp(19px, 3.3vw, 35px);
+      font-weight: 700;
+      line-height: 1.31;
+      letter-spacing: -.033em;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .social-copy strong { color: #84ff40; font-weight: 800; font-style: italic; }
+
+    .description {
+      margin: 36px 0 51px;
+      color: #f0f0f0;
+      font-size: clamp(22px, 3.6vw, 39px);
+      line-height: 1.43;
+      letter-spacing: -.02em;
+      font-weight: 400;
+    }
+
+    .cta {
+      position: relative;
+      width: calc(100% - 24px);
+      margin: 0 auto;
+      min-height: 142px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+      padding: 22px 50px;
+      border: none;
+      border-radius: 47px;
+      background: linear-gradient(115deg, #c7ff83 0%, #a9ff5a 55%, #8bfa40 100%);
+      color: #050b02;
+      font: 800 clamp(24px, 4.4vw, 46px)/1.12 Arial, Helvetica, sans-serif;
+      letter-spacing: -.048em;
+      white-space: nowrap;
       text-decoration: none;
-      border: 0;
-      cursor: pointer;
-      box-shadow: 0 0 28px rgba(143, 240, 76, 0.35), 0 10px 30px rgba(0, 0, 0, 0.35);
-      transition: transform 0.12s ease, filter 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 20px 37px rgba(87, 244, 39, .19), 0 0 25px rgba(109, 255, 63, .09);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-    .btn:active { transform: scale(0.98); filter: brightness(0.95); }
-    .btn svg { width: 20px; height: 20px; }
-    .btn.disabled { opacity: 0.45; pointer-events: none; }
+    .cta:hover { transform: translateY(-2px); box-shadow: 0 23px 42px rgba(87,244,39,.28); }
+    .cta:focus-visible { outline: 4px solid white; outline-offset: 5px; }
+    .cta svg { width: 38px; height: 38px; flex-shrink: 0; }
 
-    .note {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 16px;
+    .subline {
+      margin: 38px auto 36px;
+      font-size: clamp(19px, 3.15vw, 33px);
+      line-height: 1.4;
+      color: #c6c8c5;
+      letter-spacing: -.018em;
     }
-    hr {
-      border: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      margin: 22px 0 18px;
-    }
-    .ticks {
-      display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 8px 22px;
-      color: var(--soft);
-      font-size: 14px;
-    }
-    .ticks span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .ticks svg { width: 16px; height: 16px; }
+    .rule { height: 2px; width: calc(100% - 24px); margin: 0 auto; background: #647065; opacity: .64; }
 
-    /* Small phones */
-    @media (max-width: 380px) {
-      .card { padding: 28px 16px 22px; }
-      .sub { font-size: 16px; }
-      .ticks { gap: 8px 14px; font-size: 13px; }
+    .benefits {
+      margin: 49px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+      color: #efefef;
+      font-size: clamp(20px, 3.15vw, 33px);
+      line-height: 1.25;
+      white-space: nowrap;
+      text-align: left;
     }
+    .benefit { display: flex; align-items: center; gap: 16px; }
+    .benefit svg { width: 37px; height: 37px; color: #adff79; flex-shrink: 0; stroke-width: 3; }
+
+    @media (max-width: 800px) {
+      body { padding: 26px 16px 56px; }
+      .panel { min-height: auto; padding: 50px 24px 65px; border-radius: 38px; }
+      .globe-tile { width: 165px; height: 165px; border-radius: 40px; }
+      .globe-tile svg { width: 80px; height: 80px; }
+      .eyebrow { margin: 39px 0 25px; gap: 16px; letter-spacing: .20em; }
+      .eyebrow-dot { flex-basis: 14px; height: 14px; }
+      h1 { white-space: normal; margin-bottom: 29px; }
+      .social-strip { gap: 18px; padding: 20px 15px; border-radius: 32px; }
+      .social-icons { gap: 8px; }
+      .social-icon { width: 42px; height: 42px; }
+      .social-separator { height: 60px; width: 2px; }
+      .description { margin: 32px 0 36px; }
+      .cta { min-height: 100px; width: 100%; padding: 18px; border-radius: 32px; }
+      .cta svg { width: 31px; height: 31px; }
+      .subline { margin: 26px auto 28px; }
+      .benefits { gap: 28px; margin-top: 34px; }
+      .benefit { gap: 9px; }
+      .benefit svg { width: 27px; height: 27px; }
+    }
+    @media (max-width: 570px) {
+      body { padding: 14px 10px 35px; }
+      .panel { padding: 34px 16px 44px; border-radius: 28px; }
+      .globe-tile { width: 125px; height: 125px; border-radius: 30px; }
+      .globe-tile svg { width: 65px; height: 65px; }
+      .eyebrow { font-size: 16px; gap: 11px; letter-spacing: .19em; margin: 29px 0 20px; }
+      .eyebrow-dot { flex-basis: 10px; height: 10px; }
+      h1 { font-size: clamp(36px, 9.5vw, 54px); letter-spacing: -.055em; }
+      .social-strip { flex-direction: column; gap: 12px; padding: 17px 10px; border-radius: 24px; }
+      .social-icons { gap: 13px; }
+      .social-icon { width: 48px; height: 48px; }
+      .social-separator { height: 2px; width: 75%; }
+      .social-copy { font-size: clamp(17px, 4.8vw, 23px); text-align: center; white-space: normal; }
+      .description { font-size: clamp(20px, 5.2vw, 27px); margin: 25px 0 31px; }
+      .cta { min-height: 80px; font-size: clamp(20px, 5.5vw, 29px); gap: 12px; padding: 12px 8px; border-radius: 26px; }
+      .cta svg { width: 27px; height: 27px; }
+      .subline { font-size: 17px; }
+      .benefits { flex-wrap: wrap; gap: 18px 27px; font-size: 17px; }
+      .benefit svg { width: 23px; height: 23px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .cta { transition: none; } }
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#a6f56a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M3 12h18"/>
-        <path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>
+  <main class="panel">
+    <div class="globe-tile" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="50" cy="50" r="42" />
+        <path d="M8 50h84M50 8c-14 14-20 28-20 42s6 28 20 42M50 8c14 14 20 28 20 42S64 78 50 92" />
       </svg>
     </div>
 
-    <div class="pill"><span class="dot"></span>Our Website</div>
+    <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span><span>OUR WEBSITE</span></div>
 
     <h1>Shop or <span>Learn More</span></h1>
 
-    <div class="platforms" id="platforms">
-      <!-- Put your icons image at assets/social-icons.png (one image with all the icons in a row). -->
-      <img src="assets/social-icons.png" alt="Facebook, Instagram, TikTok, X"
-           onerror="document.getElementById('platforms').classList.add('no-icons')">
-      <span class="bar" aria-hidden="true"></span>
-      <div class="label"><span>US Facebook, IG, TikTok,</span><span>Twitter <em>and more</em></span></div>
+    <div class="social-strip" aria-label="Facebook, Instagram, TikTok, X and more">
+      <div class="social-icons" aria-hidden="true">
+        <span class="social-icon" style="background:#1177e9">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="#fff" d="M38.7 64V35.9h9.4l1.4-11H38.7v-7c0-3.2.9-5.4 5.4-5.4h5.8V2.7C48.9 2.5 45.4 2 41.3 2 32.7 2 26.8 7.2 26.8 16.7v8.2h-9.7v11h9.7V64z" /></svg>
+        </span>
+        <span class="social-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <defs><radialGradient id="igGrad" cx="30%" cy="105%" r="130%"><stop offset="0" stop-color="#ffdc55"/><stop offset=".35" stop-color="#ff553b"/><stop offset=".69" stop-color="#d51aa3"/><stop offset="1" stop-color="#5937d7"/></radialGradient></defs>
+            <circle cx="32" cy="32" r="32" fill="url(#igGrad)"/>
+            <rect x="13.5" y="13.5" width="37" height="37" rx="11" fill="none" stroke="white" stroke-width="4.4"/>
+            <circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="4.3"/>
+            <circle cx="44" cy="20.5" r="2.8" fill="white"/>
+          </svg>
+        </span>
+        <span class="social-icon" style="background:#050505">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M37 10v29.5c0 10-6.5 15.6-14.9 15.6-8.7 0-13.4-6.1-13.4-13.3 0-7.9 6.2-13.4 13.9-13.4 1.3 0 2.2.1 3.2.4v10.1a7.3 7.3 0 0 0-3.6-.8c-3.3 0-5.6 1.9-5.6 4.8s2.2 4.7 5.4 4.7c3.3 0 5-2.4 5-6V9h10c.8 6.1 4.6 9.7 10.9 10.4v10.1C43.2 29.8 39.7 28.2 37 26z" fill="#25f4ee" transform="translate(-2 2)"/>
+            <path d="M37 10v29.5c0 10-6.5 15.6-14.9 15.6-8.7 0-13.4-6.1-13.4-13.3 0-7.9 6.2-13.4 13.9-13.4 1.3 0 2.2.1 3.2.4v10.1a7.3 7.3 0 0 0-3.6-.8c-3.3 0-5.6 1.9-5.6 4.8s2.2 4.7 5.4 4.7c3.3 0 5-2.4 5-6V9h10c.8 6.1 4.6 9.7 10.9 10.4v10.1C43.2 29.8 39.7 28.2 37 26z" fill="#fe2c55" transform="translate(2 -1)"/>
+            <path d="M37 10v29.5c0 10-6.5 15.6-14.9 15.6-8.7 0-13.4-6.1-13.4-13.3 0-7.9 6.2-13.4 13.9-13.4 1.3 0 2.2.1 3.2.4v10.1a7.3 7.3 0 0 0-3.6-.8c-3.3 0-5.6 1.9-5.6 4.8s2.2 4.7 5.4 4.7c3.3 0 5-2.4 5-6V9h10c.8 6.1 4.6 9.7 10.9 10.4v10.1C43.2 29.8 39.7 28.2 37 26z" fill="white"/>
+          </svg>
+        </span>
+        <span class="social-icon" style="background:#050505">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="#fff" d="M12 11h11.3l12 16.6L49.2 11H54L37.6 30.8 55 53H43.7L30.4 34.9 15.3 53H10.5l17.6-21.2zM19 14.6 45.7 49.4h3.1L22.1 14.6z"/>
+          </svg>
+        </span>
+      </div>
+      <span class="social-separator" aria-hidden="true"></span>
+      <div class="social-copy">US FACBOOK, IG, TIKTOK,<br />TWITTER <strong>AND MORE</strong></div>
     </div>
 
-    <p class="sub">Open our website in your browser to shop or learn more.</p>
+    <p class="description">Open our website in your browser<br />to shop or learn more.</p>
 
-    <a id="go" class="btn" href="{{LINK}}" target="_blank" rel="noopener">
-      Continue to Website
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M7 17L17 7"/><path d="M8 7h9v9"/>
+    <!-- Change the URL in href below to your actual website. -->
+    <a class="cta" href="https://example.com/" target="_blank" rel="noopener noreferrer">
+      <span>Continue to Website</span>
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 25 25 7M12 7h13v13" />
       </svg>
     </a>
 
-    <p class="note">Opens our website in your external browser.</p>
-
-    <hr>
-
-    <div class="ticks">
-      <span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9ff05c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-        Browse the website
-      </span>
-      <span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9ff05c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-        Continue securely
-      </span>
+    <p class="subline">Opens our website in your external browser.</p>
+    <div class="rule" role="separator"></div>
+    <div class="benefits">
+      <div class="benefit"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 16 8 8L27 8" /></svg><span>Browse the website</span></div>
+      <div class="benefit"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 16 8 8L27 8" /></svg><span>Continue securely</span></div>
     </div>
   </main>
-
-  <script>
-    (function () {
-      var tg = window.Telegram && window.Telegram.WebApp;
-      var meta = document.querySelector('meta[name="link-target"]');
-      var url = meta ? meta.content : "";
-      var btn = document.getElementById("go");
-
-      if (!/^https?:\/\//i.test(url)) {
-        btn.classList.add("disabled");
-        return;
-      }
-
-      if (tg) {
-        try {
-          tg.ready();
-          tg.expand();
-          tg.setHeaderColor && tg.setHeaderColor("#050b05");
-          tg.setBackgroundColor && tg.setBackgroundColor("#050b05");
-        } catch (e) {}
-      }
-
-      btn.addEventListener("click", function (e) {
-        // Inside Telegram: open in the external browser.
-        if (tg && tg.initData) {
-          e.preventDefault();
-          try { tg.HapticFeedback && tg.HapticFeedback.impactOccurred("medium"); } catch (e2) {}
-          tg.openLink(url);
-        }
-        // Outside Telegram: the normal link opens it.
-      });
-    })();
-  </script>
 </body>
 </html>
