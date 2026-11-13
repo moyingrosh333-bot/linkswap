@@ -10,121 +10,173 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #0a0d0a;
-      --card-top: #1a2418;
-      --card-bottom: #0f140f;
-      --border: rgba(255, 255, 255, 0.10);
-      --green: #a8e06c;
-      --green-2: #8fd35a;
-      --green-light: #c6ef8f;
-      --text: #f4f6f2;
-      --muted: #9aa396;
-      --faint: #7d857a;
+      --bg: #050b05;
+      --card-top: #15301a;
+      --card-bottom: #0a170c;
+      --line: #3f9a2c;
+      --green: #9ff05c;
+      --green-btn-1: #cdf68f;
+      --green-btn-2: #8ff04c;
+      --text: #f6f8f4;
+      --soft: #e3e9e0;
+      --muted: #a9b3a5;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
-      background: radial-gradient(120% 80% at 50% 0%, #121a11 0%, var(--bg) 60%);
+      background:
+        radial-gradient(90% 60% at 50% 0%, rgba(80, 170, 50, 0.16) 0%, transparent 70%),
+        radial-gradient(70% 50% at 50% 100%, rgba(60, 140, 40, 0.10) 0%, transparent 70%),
+        var(--bg);
       color: var(--text);
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+      padding: 20px 14px calc(20px + env(safe-area-inset-bottom));
       min-height: 100vh;
     }
     .card {
       width: 100%;
-      max-width: 420px;
-      background: linear-gradient(180deg, var(--card-top) 0%, var(--card-bottom) 55%);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 40px 24px 26px;
+      max-width: 430px;
+      background: linear-gradient(180deg, var(--card-top) 0%, var(--card-bottom) 60%);
+      border: 1.5px solid var(--line);
+      border-radius: 30px;
+      padding: 34px 20px 26px;
       text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+      box-shadow:
+        0 0 0 1px rgba(159, 240, 92, 0.06),
+        0 0 40px rgba(80, 180, 40, 0.18),
+        0 30px 80px rgba(0, 0, 0, 0.6);
     }
+
+    /* Globe tile */
     .icon {
-      width: 84px; height: 84px;
-      margin: 0 auto 26px;
-      border-radius: 22px;
+      width: 96px; height: 96px;
+      margin: 0 auto 30px;
+      border-radius: 26px;
       display: grid; place-items: center;
-      background: linear-gradient(160deg, #3b5233 0%, #22301f 100%);
-      border: 1px solid rgba(168, 224, 108, 0.22);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      background: linear-gradient(160deg, #3a6e2c 0%, #1d3d18 100%);
+      border: 1.5px solid #4fae35;
+      box-shadow: 0 0 24px rgba(110, 210, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
-    .icon svg { width: 40px; height: 40px; }
+    .icon svg { width: 46px; height: 46px; }
+
+    /* OUR WEBSITE */
     .pill {
-      display: inline-flex; align-items: center; gap: 10px;
-      color: var(--green-light);
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 0.22em;
+      display: inline-flex; align-items: center; gap: 12px;
+      color: var(--green);
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .pill .dot {
-      width: 7px; height: 7px; border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 10px rgba(168, 224, 108, 0.8);
+      box-shadow: 0 0 12px rgba(159, 240, 92, 0.9);
     }
+
     h1 {
-      font-size: clamp(28px, 8vw, 36px);
+      font-size: clamp(30px, 9vw, 40px);
       font-weight: 800;
-      letter-spacing: -0.035em;
-      line-height: 1.1;
-      margin-bottom: 14px;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      margin-bottom: 18px;
     }
     h1 span { color: var(--green); }
-    .sub {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-      max-width: 330px;
-      margin: 0 auto 26px;
-    }
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      width: 100%;
-      padding: 19px 20px;
+
+    /* Platforms box */
+    .platforms {
+      display: flex; align-items: center; justify-content: center;
+      gap: clamp(8px, 2.6vw, 14px);
+      background: rgba(12, 32, 12, 0.85);
+      border: 1px solid rgba(90, 170, 60, 0.28);
       border-radius: 20px;
-      background: linear-gradient(100deg, var(--green-light) 0%, var(--green-2) 100%);
-      color: #0c120b;
-      font-size: 17px; font-weight: 800;
+      padding: 12px clamp(10px, 3vw, 16px);
+      margin: 0 auto 20px;
+    }
+    .platforms img {
+      height: clamp(20px, 6.8vw, 32px); width: auto; display: block; flex-shrink: 0;
+    }
+    .platforms .bar {
+      width: 2px; align-self: stretch; margin: 2px 0;
+      background: var(--green); border-radius: 2px; flex-shrink: 0; opacity: 0.85;
+    }
+    .platforms .label {
+      font-size: clamp(9.5px, 3.05vw, 14.5px); font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-align: center;
+    }
+    .platforms .label span { display: block; white-space: nowrap; }
+    .platforms .label em { color: var(--green); font-style: italic; }
+    /* If the icons image is missing, show only the text */
+    .platforms.no-icons img, .platforms.no-icons .bar { display: none; }
+    .platforms.no-icons .label { font-size: clamp(13px, 4vw, 16px); }
+
+    .sub {
+      color: var(--soft);
+      font-size: 17px;
+      line-height: 1.5;
+      max-width: 320px;
+      margin: 0 auto 24px;
+    }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      width: 100%;
+      padding: 20px 20px;
+      border-radius: 22px;
+      background: linear-gradient(100deg, var(--green-btn-1) 0%, var(--green-btn-2) 100%);
+      color: #0a1208;
+      font-size: 18px; font-weight: 800;
       letter-spacing: -0.01em;
       text-decoration: none;
       border: 0;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(143, 211, 90, 0.22);
+      box-shadow: 0 0 28px rgba(143, 240, 76, 0.35), 0 10px 30px rgba(0, 0, 0, 0.35);
       transition: transform 0.12s ease, filter 0.12s ease;
       -webkit-tap-highlight-color: transparent;
     }
     .btn:active { transform: scale(0.98); filter: brightness(0.95); }
-    .btn svg { width: 18px; height: 18px; }
+    .btn svg { width: 20px; height: 20px; }
     .btn.disabled { opacity: 0.45; pointer-events: none; }
+
     .note {
-      color: var(--faint);
-      font-size: 13px;
-      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 16px;
     }
     hr {
       border: 0;
-      border-top: 1px solid var(--border);
-      margin: 24px 0 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      margin: 22px 0 18px;
     }
     .ticks {
       display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 8px 16px;
-      color: var(--muted);
-      font-size: 13px;
+      gap: 8px 22px;
+      color: var(--soft);
+      font-size: 14px;
     }
-    .ticks span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .ticks svg { width: 14px; height: 14px; }
+    .ticks span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .ticks svg { width: 16px; height: 16px; }
+
+    /* Small phones */
+    @media (max-width: 380px) {
+      .card { padding: 28px 16px 22px; }
+      .sub { font-size: 16px; }
+      .ticks { gap: 8px 14px; font-size: 13px; }
+    }
   </style>
 </head>
 <body>
   <main class="card">
     <div class="icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#a8e06c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#a6f56a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9"/>
         <path d="M3 12h18"/>
         <path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>
@@ -135,11 +187,19 @@
 
     <h1>Shop or <span>Learn More</span></h1>
 
-    <p class="sub">You're one step away. Open our website in your browser to shop or learn more.</p>
+    <div class="platforms" id="platforms">
+      <!-- Put your icons image at assets/social-icons.png (one image with all the icons in a row). -->
+      <img src="assets/social-icons.png" alt="Facebook, Instagram, TikTok, X"
+           onerror="document.getElementById('platforms').classList.add('no-icons')">
+      <span class="bar" aria-hidden="true"></span>
+      <div class="label"><span>US Facebook, IG, TikTok,</span><span>Twitter <em>and more</em></span></div>
+    </div>
+
+    <p class="sub">Open our website in your browser to shop or learn more.</p>
 
     <a id="go" class="btn" href="{{LINK}}" target="_blank" rel="noopener">
       Continue to Website
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M7 17L17 7"/><path d="M8 7h9v9"/>
       </svg>
     </a>
@@ -150,11 +210,11 @@
 
     <div class="ticks">
       <span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#a8e06c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9ff05c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
         Browse the website
       </span>
       <span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#a8e06c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9ff05c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
         Continue securely
       </span>
     </div>
@@ -176,8 +236,8 @@
         try {
           tg.ready();
           tg.expand();
-          tg.setHeaderColor && tg.setHeaderColor("#0a0d0a");
-          tg.setBackgroundColor && tg.setBackgroundColor("#0a0d0a");
+          tg.setHeaderColor && tg.setHeaderColor("#050b05");
+          tg.setBackgroundColor && tg.setBackgroundColor("#050b05");
         } catch (e) {}
       }
 
