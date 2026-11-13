@@ -419,6 +419,22 @@ async def fallback(message: Message):
     await message.answer(text, reply_markup=menu_kb(site_url))
 
 
+# Anyone NOT in ADMIN_IDS ends up here. Shows them their ID so a wrong
+# ADMIN_IDS value is easy to spot.
+public_router = Router()
+
+
+@public_router.message(CommandStart())
+async def not_admin(message: Message):
+    uid = message.from_user.id if message.from_user else 0
+    log.warning("User %s sent /start but is NOT in ADMIN_IDS %s", uid, sorted(ADMIN_IDS))
+    await message.answer(
+        "⛔ This bot is private.\n\n"
+        f"Your Telegram ID: <code>{uid}</code>\n"
+        "If this is your bot, put this number in ADMIN_IDS on Render."
+    )
+
+
 # ─────────────────────────── Startup ───────────────────────────
 
 def check_config():
@@ -447,8 +463,23 @@ def make_bot_and_dp() -> tuple[Bot, Dispatcher]:
     )
     dp = Dispatcher()
     dp.include_router(router)
+    dp.include_router(public_router)
+
+    @dp.update.outer_middleware()
+    async def log_updates(handler, event, data):
+        u = data.get("event_from_user")
+        log.info(
+            "Got %s from user %s (@%s)%s",
+            event.event_type,
+            u.id if u else "?",
+            (u.username if u else None) or "-",
+            "" if (u and u.id in ADMIN_IDS) else "  <- not in ADMIN_IDS",
+        )
+        return await handler(event, data)
 
     async def on_startup(bot: Bot):
+        me = await bot.get_me()
+        log.info("Bot is @%s. Admins: %s", me.username, sorted(ADMIN_IDS))
         await bot.set_my_commands([
             BotCommand(command="start", description="Open the link panel"),
             BotCommand(command="cancel", description="Cancel"),
@@ -464,6 +495,7 @@ def make_bot_and_dp() -> tuple[Bot, Dispatcher]:
 
 async def run_polling():
     bot, dp = make_bot_and_dp()
+    # Polling removes the webhook. Never run this copy at the same time as the Render one.
     await bot.delete_webhook(drop_pending_updates=False)
     log.info("Starting in polling mode")
     await dp.start_polling(bot)
@@ -474,10 +506,13 @@ def build_webhook_app(bot: Bot, dp: Dispatcher) -> web.Application:
     secret = hashlib.sha256(BOT_TOKEN.encode()).hexdigest()[:32]
 
     async def set_hook(bot: Bot):
+        # Always (re)set it: fixes a webhook removed by another copy of the bot.
+        await bot.set_webhook(url, secret_token=secret, allowed_updates=dp.resolve_used_update_types())
         info = await bot.get_webhook_info()
-        if info.url != url:
-            await bot.set_webhook(url, secret_token=secret)
-            log.info("Webhook set to %s", url)
+        log.info(
+            "Webhook: %s | waiting updates: %s | last Telegram error: %s",
+            info.url, info.pending_update_count, info.last_error_message or "none",
+        )
 
     dp.startup.register(set_hook)
 
@@ -486,7 +521,32 @@ def build_webhook_app(bot: Bot, dp: Dispatcher) -> web.Application:
     async def health(_):
         return web.Response(text="ok")
 
+    async def status(_):
+        """Open https://<your-app>.onrender.com/status in a browser to check the bot."""
+        lines = []
+        try:
+            me = await bot.get_me()
+            info = await bot.get_webhook_info()
+            lines += [
+                f"Bot: @{me.username}",
+                f"Webhook: {info.url or 'NOT SET'}",
+                f"Webhook is correct: {'YES' if info.url == url else 'NO - should be ' + url}",
+                f"Updates waiting: {info.pending_update_count}",
+                f"Last Telegram error: {info.last_error_message or 'none'}",
+            ]
+            if info.last_error_date:
+                lines.append(f"Last error time (UTC): {info.last_error_date:%Y-%m-%d %H:%M:%S}")
+        except Exception as err:  # bad token etc.
+            lines.append(f"Telegram problem: {err}")
+        lines.append(f"Admin IDs set: {len(ADMIN_IDS)}")
+        try:
+            lines.append(f"Netlify page: {await netlify.site_url()}")
+        except NetlifyError as err:
+            lines.append(f"Netlify problem: {err}")
+        return web.Response(text="\n".join(lines))
+
     app.router.add_get("/", health)
+    app.router.add_get("/status", status)
     SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=secret).register(app, path="/webhook")
     setup_application(app, dp, bot=bot)
     return app
