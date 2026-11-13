@@ -15,14 +15,12 @@ Run modes (picked automatically):
 import asyncio
 import hashlib
 import html
-import io
 import json
 import logging
 import os
 import re
 import sys
 import time
-import zipfile
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -89,16 +87,27 @@ def link_from_message(message: Message) -> str | None:
     return normalize_link(text)
 
 
-def build_site_zip(link: str) -> bytes:
-    """Fill the template with the link and zip it for Netlify."""
+HEADERS_FILE = (
+    "/\n"
+    "  Content-Type: text/html; charset=UTF-8\n"
+    "  Cache-Control: public, max-age=0, must-revalidate\n"
+    "/index.html\n"
+    "  Content-Type: text/html; charset=UTF-8\n"
+    "  Cache-Control: public, max-age=0, must-revalidate\n"
+)
+
+
+def build_site_files(link: str) -> dict[str, bytes]:
+    """Fill the template with the link. Returns the files to upload to Netlify."""
     tpl = TEMPLATE_PATH.read_text(encoding="utf-8")
     if PLACEHOLDER not in tpl:
         raise RuntimeError(f"template.html must contain {PLACEHOLDER}")
     page = tpl.replace(PLACEHOLDER, html.escape(link, quote=True))
-    buf = io.BytesIO()
-    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("index.html", page)
-    return buf.getvalue()
+    return {
+        "index.html": page.encode("utf-8"),
+        # Forces Netlify to serve the page as a web page, never as plain text.
+        "_headers": HEADERS_FILE.encode("utf-8"),
+    }
 
 
 META_RE = re.compile(
@@ -167,14 +176,28 @@ class Netlify:
             raise NetlifyError("Netlify did not return a URL for this site.")
         return self._site_url
 
-    async def deploy_zip(self, data: bytes, title: str) -> dict:
-        return await self._api(
+    async def deploy_files(self, files: dict[str, bytes], title: str) -> dict:
+        """Netlify's recommended 'file digest' deploy: send SHA1s, then upload what it asks for."""
+        digests = {f"/{path}": hashlib.sha1(data).hexdigest() for path, data in files.items()}
+        deploy = await self._api(
             "POST",
             f"/sites/{self.site_id}/deploys",
             params={"title": title[:200]},
-            data=data,
-            headers={"Content-Type": "application/zip"},
+            json={"files": digests},
         )
+        deploy_id = deploy.get("id")
+        if not deploy_id:
+            raise NetlifyError("Netlify did not return a deploy ID.")
+        required = set(deploy.get("required") or [])
+        for path, data in files.items():
+            if digests[f"/{path}"] in required:
+                await self._api(
+                    "PUT",
+                    f"/deploys/{deploy_id}/files/{path}",
+                    data=data,
+                    headers={"Content-Type": "application/octet-stream"},
+                )
+        return deploy
 
     async def wait_ready(self, deploy_id: str, timeout: float = 120) -> dict:
         end = time.monotonic() + timeout
@@ -332,9 +355,7 @@ async def apply_link(message: Message, link: str):
                 old = await netlify.live_link()
             except NetlifyError:
                 old = None
-            deploy = await netlify.deploy_zip(build_site_zip(link), title=f"Link: {link}")
-            if not deploy.get("id"):
-                raise NetlifyError("Netlify did not return a deploy ID.")
+            deploy = await netlify.deploy_files(build_site_files(link), title=f"Link: {link}")
             await netlify.wait_ready(deploy["id"])
             live = await netlify.wait_live(link)
         except NetlifyError as err:
