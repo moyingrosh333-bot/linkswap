@@ -103,11 +103,18 @@ def build_site_files(link: str) -> dict[str, bytes]:
     if PLACEHOLDER not in tpl:
         raise RuntimeError(f"template.html must contain {PLACEHOLDER}")
     page = tpl.replace(PLACEHOLDER, html.escape(link, quote=True))
-    return {
+    files = {
         "index.html": page.encode("utf-8"),
         # Forces Netlify to serve the page as a web page, never as plain text.
         "_headers": HEADERS_FILE.encode("utf-8"),
     }
+    # Images etc. in the "assets" folder next to template.html go up too.
+    assets_dir = TEMPLATE_PATH.parent / "assets"
+    if assets_dir.is_dir():
+        for f in sorted(assets_dir.iterdir()):
+            if f.is_file() and not f.name.startswith("."):
+                files[f"assets/{f.name}"] = f.read_bytes()
+    return files
 
 
 META_RE = re.compile(
