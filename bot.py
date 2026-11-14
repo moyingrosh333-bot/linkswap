@@ -364,6 +364,12 @@ async def apply_link(message: Message, link: str):
                 old = None
             deploy = await netlify.deploy_files(build_site_files(link), title=f"Link: {link}")
             await netlify.wait_ready(deploy["id"])
+            # If Netlify auto publishing is locked, the new deploy is built but not live.
+            # Publish it ourselves so the change always goes live.
+            site_now = await netlify.site()
+            if (site_now.get("published_deploy") or {}).get("id") != deploy["id"]:
+                log.info("Deploy %s is not live yet (auto publishing locked?). Publishing it.", deploy["id"])
+                await netlify.restore(deploy["id"])
             live = await netlify.wait_live(link)
         except NetlifyError as err:
             log.warning("deploy failed: %s", err)
@@ -547,7 +553,13 @@ def build_webhook_app(bot: Bot, dp: Dispatcher) -> web.Application:
             lines.append(f"Telegram problem: {err}")
         lines.append(f"Admin IDs set: {len(ADMIN_IDS)}")
         try:
-            lines.append(f"Netlify page: {await netlify.site_url()}")
+            site = await netlify.site()
+            pub = site.get("published_deploy") or {}
+            lines.append(f"Netlify page: {netlify._site_url}")
+            lines.append(f"Netlify live deploy: {pub.get('id') or 'none'} (made {pub.get('created_at') or '?'})")
+            lines.append(f"Netlify auto publishing: {'LOCKED' if pub.get('locked') else 'on'}")
+            live = await netlify.live_link()
+            lines.append(f"Button on live page goes to: {live or 'no link found (old page)'}")
         except NetlifyError as err:
             lines.append(f"Netlify problem: {err}")
         return web.Response(text="\n".join(lines))
